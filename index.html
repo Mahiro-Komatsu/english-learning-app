@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>LinguaFlow - 英語学習アプリ</title>
+  
+  <!-- PWA Meta tags -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#4f46e5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="LinguaFlow" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+
+  <!-- Tailwind CSS CDN with configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./css/app.css?v=20261013_v15" />
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased">
+  
+  <!-- App Header -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="text-base font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">LinguaFlow</span>
+        </div>
+      </div>
+
+      <!-- Header Status & Dark mode -->
+      <div class="flex items-center space-x-2.5">
+        <!-- Streak -->
+        <div class="flex items-center space-x-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-900/40 px-2.5 py-1 rounded-full text-xs font-bold text-amber-600 dark:text-amber-400">
+          <span>🔥</span>
+          <span id="header-streak-count">1日</span>
+        </div>
+
+        <!-- Level badge -->
+        <div class="flex items-center space-x-1 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-900/40 px-2.5 py-1 rounded-full text-xs font-bold text-indigo-600 dark:text-indigo-400">
+          <span>🌟</span>
+          <span id="header-level-badge">Lv.1</span>
+        </div>
+
+        <!-- Theme toggle -->
+        <button id="btn-toggle-theme" class="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="ダークモード切替">
+          🌓
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Area -->
+  <main class="flex-1 max-w-3xl w-full mx-auto px-4 pt-4">
+    <div id="main-content">
+      <!-- Injected dynamically by App Controller -->
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-t border-slate-200 dark:border-slate-800 safe-area-bottom shadow-lg">
+    <div class="max-w-md mx-auto px-2 flex justify-around items-center h-16">
+      
+      <!-- Home Tab -->
+      <button class="nav-tab-btn flex flex-col items-center justify-center flex-1 py-1 transition group text-indigo-600 dark:text-indigo-400" data-tab="dashboard">
+        <span class="text-xl leading-none">🏠</span>
+        <span class="text-[11px] font-semibold mt-1">ホーム</span>
+      </button>
+
+      <!-- Flashcards Tab -->
+      <button class="nav-tab-btn flex flex-col items-center justify-center flex-1 py-1 transition group text-gray-400 dark:text-gray-500" data-tab="flashcards">
+        <span class="text-xl leading-none">📚</span>
+        <span class="text-[11px] font-semibold mt-1">単語帳</span>
+      </button>
+
+      <!-- Grammar Tab -->
+      <button class="nav-tab-btn flex flex-col items-center justify-center flex-1 py-1 transition group text-gray-400 dark:text-gray-500" data-tab="grammar">
+        <span class="text-xl leading-none">📝</span>
+        <span class="text-[11px] font-semibold mt-1">文法テスト</span>
+      </button>
+
+      <!-- AI Talk Tab -->
+      <button class="nav-tab-btn flex flex-col items-center justify-center flex-1 py-1 transition group text-gray-400 dark:text-gray-500" data-tab="conversation">
+        <span class="text-xl leading-none">🤖</span>
+        <span class="text-[11px] font-semibold mt-1">AI英会話</span>
+      </button>
+
+      <!-- Settings Tab -->
+      <button class="nav-tab-btn flex flex-col items-center justify-center flex-1 py-1 transition group text-gray-400 dark:text-gray-500" data-tab="settings">
+        <span class="text-xl leading-none">⚙️</span>
+        <span class="text-[11px] font-semibold mt-1">設定</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- Entry Script -->
+  <script type="module" src="./js/app.js?v=20261013_v15"></script>
+</body>
+</html>
